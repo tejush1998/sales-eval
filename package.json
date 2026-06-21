@@ -1,0 +1,21 @@
+{
+  "name": "sales-call-evaluator",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "backend",
+    "frontend",
+    "tests"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n backend,frontend -c blue,magenta \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "dev:backend": "npm run dev -w backend",
+    "dev:frontend": "npm run dev -w frontend",
+    "start": "npm run dev -w backend",
+    "test:e2e": "npm run test -w tests"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
