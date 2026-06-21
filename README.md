@@ -16,6 +16,12 @@ URL → YouTube audio (mp3) → Sarvam saaras:v3 transcription + diarization →
 4. DeepSeek (via OpenRouter) rates the call on 5 criteria
 5. Results show overall score, per-criteria breakdown, strengths, improvements, and the full transcript
 
+![App screenshot](readme-images/image1.png)
+
+![Results breakdown](readme-images/image2.png)
+
+![Evaluation history](readme-images/image3.png)
+
 ## Quick start
 
 ```bash
