@@ -2,7 +2,7 @@
 
 **[sales-eval.onrender.com](https://sales-eval.onrender.com/)**
 
-Upload a sales call recording. Saleval transcribes Hindi audio into English with speaker diarization, and scores the call across 5 sales-quality criteria using AI.
+Upload a sales call recording in any language. Saleval transcribes audio with speaker diarization, and scores the call across 5 sales-quality criteria using AI.
 
 YouTube URL support is available in the dev environment only.
 
@@ -13,14 +13,13 @@ Built with Express, React + Vite, Sarvam AI (transcription), and OpenRouter (Dee
 ## How it works
 
 ```
-Recording → mono 16 kHz mp3 → Sarvam saaras:v3 transcription + diarization → DeepSeek rating → results
+Recording → Sarvam saaras:v3 transcription + diarization → DeepSeek rating → results
 ```
 
 1. Upload an audio file (MP3, WAV, M4A)
-2. Audio is converted to mono 16 kHz mp3
-3. Sarvam transcribes Hindi audio to English diarized text
-4. DeepSeek (via OpenRouter) rates the call on 5 criteria
-5. Results show overall score, per-criteria breakdown, strengths, improvements, and the full transcript
+2. Sarvam transcribes audio with diarization — **supports Hindi, English, and more**
+3. DeepSeek (via OpenRouter) rates the call on 5 criteria
+4. Results show overall score, per-criteria breakdown, strengths, improvements, and the full transcript
 
 ![App screenshot](readme-images/image1.png) ![Results breakdown](readme-images/image2.png)
 
