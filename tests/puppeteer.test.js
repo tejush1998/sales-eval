@@ -39,6 +39,11 @@ function log(msg) { console.log(`[e2e] ${msg}`); }
 
     await page.screenshot({ path: path.join(SHOTS, '01-empty.png'), fullPage: true });
 
+    await page.evaluate(() => {
+      const btns = document.querySelectorAll('.mode-btn');
+      for (const btn of btns) if (btn.textContent.includes('YouTube')) { btn.click(); break; }
+    });
+    await page.waitForSelector('[data-testid="yt-url-input"]');
     await page.click('[data-testid="yt-url-input"]');
     await page.type('[data-testid="yt-url-input"]', TEST_YT_URL, { delay: 10 });
     log(`Typed URL: ${TEST_YT_URL}`);

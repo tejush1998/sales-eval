@@ -1,15 +1,20 @@
 import TimingsPanel from './TimingsPanel.jsx';
 
-export default function ResultsView({ result }) {
-  const { video, transcription, rating, timings, costs, openRouter, cached } = result;
+export default function ResultsView({ result, onClose }) {
+  const { video, transcription, rating, timings, costs, openRouter, cached, audioSource, originalName } = result;
 
   return (
-    <section className="card" data-testid="results">
+    <section className="card results-card slide-in" data-testid="results">
+      <button className="back-btn" onClick={onClose}>
+        <span className="back-arrow">&larr;</span> Back to evaluations
+      </button>
+
       <div className="results-header">
         <div>
-          <h2 data-testid="video-title">{video?.title || 'Evaluation Result'}</h2>
+          <h2 data-testid="video-title">{video?.title || originalName || 'Evaluation Result'}</h2>
           {video?.author && <p className="muted">by {video.author}</p>}
           {video?.thumbnail && <img className="thumb" src={video.thumbnail} alt="" />}
+          {audioSource === 'upload' && <span className="badge badge-upload">Uploaded file</span>}
           {cached && <span className="badge badge-cached">Cached transcription</span>}
         </div>
         {rating && (

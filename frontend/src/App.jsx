@@ -25,22 +25,32 @@ export default function App() {
 
   useEffect(() => { refreshHistory(); }, []);
 
-  async function handleEvaluate(url) {
+  useEffect(() => {
+    if (!current) return;
+    const el = document.querySelector('[data-testid="results"]')?.closest('section') || document.querySelector('[data-testid="results"]');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [current]);
+
+  async function handleEvaluate(input) {
     setLoading(true);
     setError(null);
     setCurrent(null);
     setStatus('Starting…');
     try {
-      const progressTimers = [
+      const isUpload = input instanceof FormData;
+      const progressTimers = isUpload ? [
+        setTimeout(() => setStatus('Transcribing & diarizing…'), 2_000),
+        setTimeout(() => setStatus('Rating the call…'), 20_000),
+      ] : [
         setTimeout(() => setStatus('Downloading audio from YouTube…'), 400),
-        setTimeout(() => setStatus('Transcribing & diarizing (Sarvam)…'), 8_000),
-        setTimeout(() => setStatus('Rating the call (OpenRouter)…'), 25_000),
+        setTimeout(() => setStatus('Transcribing & diarizing…'), 8_000),
+        setTimeout(() => setStatus('Rating the call…'), 25_000),
       ];
 
       const res = await fetch('/api/evaluate', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url }),
+        headers: isUpload ? {} : { 'Content-Type': 'application/json' },
+        body: isUpload ? input : JSON.stringify({ url: input }),
       });
       progressTimers.forEach(clearTimeout);
 
@@ -61,7 +71,7 @@ export default function App() {
     <div className="app">
       <header className="hero">
         <h1>Sales Call Evaluator</h1>
-        <p>Paste a YouTube sales call link. We'll transcribe it (Hindi → English, diarized) and rate it.</p>
+        <p>Upload a sales call recording or paste a YouTube link. We'll transcribe it (Hindi → English, diarized) and rate it.</p>
       </header>
 
       <main>
@@ -79,7 +89,7 @@ export default function App() {
           </div>
         )}
 
-        {current && <ResultsView result={current} />}
+        {current && <ResultsView result={current} onClose={() => setCurrent(null)} />}
 
         <HistoryList
           items={history}

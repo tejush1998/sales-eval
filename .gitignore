@@ -10,3 +10,4 @@ tests/downloads/
 backend/*-player-script.js
 backend/tmp/
 specs.md
+assets

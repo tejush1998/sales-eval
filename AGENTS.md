@@ -60,3 +60,4 @@ npm run dev                   # concurrently: backend :4000 + frontend :5173
 - `data-testid` attributes on key elements (`evaluate-form`, `yt-url-input`, `submit-btn`, `results`, `video-title`, `overall-score`, `criteria`, `turns`, `status`)
 - Error classes: `card.error` in frontend
 - No test framework — raw Node.js scripts
+- **Audio upload** is the default mode; switch to YouTube mode by clicking `.mode-btn` with "YouTube" text

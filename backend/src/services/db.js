@@ -33,6 +33,9 @@ export const db = {
   findByUrl(url) {
     return read().evaluations.find((e) => e.url === url && e.status === 'completed' && e.transcription?.turns?.length > 0);
   },
+  findByFileHash(hash) {
+    return read().evaluations.find((e) => e.fileHash === hash && e.status === 'completed' && e.transcription?.turns?.length > 0);
+  },
   save(record) {
     const state = read();
     const existingIdx = state.evaluations.findIndex((e) => e.id === record.id);
