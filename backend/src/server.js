@@ -48,6 +48,12 @@ app.get('/api/health', (_req, res) => res.json({ ok: true, evaluations: db.count
 app.use('/api/evaluate', evaluateRouter);
 app.use('/api/history', historyRouter);
 
+const distPath = path.join(__dirname, '..', '..', 'frontend', 'dist');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  app.get('*', (_req, res) => res.sendFile(path.join(distPath, 'index.html')));
+}
+
 app.use((err, _req, res, _next) => {
   console.error('[error]', err);
   res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' });

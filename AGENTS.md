@@ -16,7 +16,8 @@ npm run dev                   # concurrently: backend :4000 + frontend :5173
 | `npm run test:e2e` | Puppeteer E2E (needs both servers up) |
 | `HEADLESS=false npm run test:e2e` | Watch tests in real browser |
 | `E2E_TIMEOUT_MS=600000 npm run test:e2e` | Bump wait for slow networks |
-| `npm run build -w frontend` | Prod build to `frontend/dist/` |
+| `npm run build` | Prod build frontend to `frontend/dist/` |
+| `npm start` | Production server (serves API + static frontend) |
 
 ## Architecture
 - **npm workspaces**: `backend/`, `frontend/`, `tests/` — root `package.json` has workspace scripts
@@ -25,6 +26,13 @@ npm run dev                   # concurrently: backend :4000 + frontend :5173
 - **DB**: file-based JSON at `backend/src/data/db.json` (auto-created, gitignored)
 - **Frontend Vite proxy**: `/api` → `http://localhost:4000` (configurable via `VITE_API_TARGET`)
 - **Pipeline**: URL → YouTube download + ffmpeg (mono/16kHz/mp3) → Sarvam `saaras:v3` (hi-IN, diarized) → OpenRouter DeepSeek (5 criteria, `json_object`) → db.json
+
+## Production (Render)
+- **Build**: `npm install && npm run build` — builds frontend to `frontend/dist/`
+- **Start**: `npm start` — runs backend only; serves API + static frontend on one port
+- **No .env needed** on Render — set env vars in Render dashboard
+- **Frontend Vite proxy is dev-only** — in production the backend serves static files
+- **DB resets on restart** — file-based JSON at `backend/src/data/db.json` is ephemeral on Render
 
 ## Key quirks
 - **Backend temp files** go to `tmp/<nanoid>/` — cleaned up after completion
