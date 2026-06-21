@@ -2,16 +2,30 @@ import { useEffect, useState } from 'react';
 import EvaluateForm from './components/EvaluateForm.jsx';
 import ResultsView from './components/ResultsView.jsx';
 import HistoryList from './components/HistoryList.jsx';
+import LoginForm from './components/LoginForm.jsx';
 import LiveTimer from './components/LiveTimer.jsx';
 
 const SAMPLE_URL = 'https://www.youtube.com/watch?v=eoTPt3XNHmk&pp=ygUbc2FsZXMgY2FsbCBleGFtcGxlIGluIGhpbmRp';
 
 export default function App() {
+  const [authenticated, setAuthenticated] = useState(null); // null = checking
   const [current, setCurrent] = useState(null);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [status, setStatus] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch('/api/auth/check');
+        setAuthenticated(res.ok);
+        if (res.ok) refreshHistory();
+      } catch {
+        setAuthenticated(false);
+      }
+    })();
+  }, []);
 
   async function refreshHistory() {
     try {
@@ -23,7 +37,12 @@ export default function App() {
     }
   }
 
-  useEffect(() => { refreshHistory(); }, []);
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    setAuthenticated(false);
+    setCurrent(null);
+    setHistory([]);
+  }
 
   useEffect(() => {
     if (!current) return;
@@ -67,10 +86,21 @@ export default function App() {
     }
   }
 
+  if (authenticated === null) {
+    return <div className="app"><div className="login-wrapper"><p className="muted">Checking…</p></div></div>;
+  }
+
+  if (!authenticated) {
+    return <LoginForm onLogin={() => { setAuthenticated(true); refreshHistory(); }} />;
+  }
+
   return (
     <div className="app">
       <header className="hero">
-        <h1>Sales Call Evaluator</h1>
+        <div className="hero-top">
+          <h1>Sales Call Evaluator</h1>
+          <button type="button" className="link logout-btn" onClick={handleLogout}>Logout</button>
+        </div>
         <p>Upload a sales call recording or paste a YouTube link. We'll transcribe it (Hindi → English, diarized) and rate it.</p>
       </header>
 

@@ -24,8 +24,11 @@ if (envFile) dotenv.config({ path: envFile });
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
 import { evaluateRouter } from './routes/evaluate.js';
 import { historyRouter } from './routes/history.js';
+import { authRouter } from './routes/auth.js';
+import { requireAuth } from './middleware/auth.js';
 import { db } from './services/db.js';
 
 const app = express();
@@ -42,11 +45,13 @@ console.log('[env]', JSON.stringify({
 app.use(cors({ origin: FRONTEND_ORIGIN.split(','), credentials: false }));
 app.use(express.json({ limit: '2mb' }));
 app.use(morgan('dev'));
+app.use(cookieParser(process.env.SESSION_SECRET));
 
 app.get('/api/health', (_req, res) => res.json({ ok: true, evaluations: db.count() }));
 
-app.use('/api/evaluate', evaluateRouter);
-app.use('/api/history', historyRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/evaluate', requireAuth, evaluateRouter);
+app.use('/api/history', requireAuth, historyRouter);
 
 const distPath = path.join(__dirname, '..', '..', 'frontend', 'dist');
 if (fs.existsSync(distPath)) {
