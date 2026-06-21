@@ -35,10 +35,13 @@ const app = express();
 const PORT = Number(process.env.PORT) || 4000;
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'http://localhost:5173';
 
+const omit = (v) => v ? `set (${v.length} chars)` : 'MISSING';
 console.log('[env]', JSON.stringify({
   envFile: envFile || '<none>',
-  sarvam: process.env.SARVAM_API_KEY ? `set (${process.env.SARVAM_API_KEY.length} chars)` : 'MISSING',
-  openrouter: process.env.OPENROUTER_API_KEY ? `set (${process.env.OPENROUTER_API_KEY.length} chars)` : 'MISSING',
+  sarvam: omit(process.env.SARVAM_API_KEY),
+  openrouter: omit(process.env.OPENROUTER_API_KEY),
+  appPassword: omit(process.env.APP_PASSWORD),
+  sessionSecret: omit(process.env.SESSION_SECRET),
   model: process.env.OPENROUTER_MODEL || '<unset, will use default>',
 }));
 
